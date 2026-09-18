@@ -4,9 +4,12 @@ namespace App\Models;
 
 use App\Enums\ProductType;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Filterable;
 
 class Product extends Model
 {
+    use Filterable;
+
     protected $fillable = [
         'name',
         'description',
@@ -17,6 +20,7 @@ class Product extends Model
 
     protected $casts = [
         'type' => ProductType::class,
+        'status' => \App\Enums\StatusEnum::class,
         'price' => 'decimal:2',
     ];
 

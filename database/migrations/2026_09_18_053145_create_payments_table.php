@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->morphs('payable');
             $table->decimal('amount', 15, 2);
-            $table->date('payment_date');
-            $table->tinyInteger('payment_method')->nullable();
-            $table->string('reference_number')->nullable();
+            $table->date('payment_date')->index();
+            $table->tinyInteger('payment_method')->nullable()->index();
+            $table->string('reference_number')->nullable()->index();
             $table->text('notes')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->timestamps();

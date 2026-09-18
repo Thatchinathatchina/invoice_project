@@ -19,7 +19,7 @@
             </div>
         @endif
 
-        <form :action="updateAction" method="POST">
+        <form :action="updateAction" method="POST" novalidate>
             @csrf
             @method('PUT')
             <input type="hidden" name="id" x-model="form.id">
@@ -27,15 +27,18 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Name <span class="text-red-500">*</span></label>
-                    <input type="text" name="name" x-model="form.name" required class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-emerald-500 focus:border-emerald-500 text-sm py-2">
+                    <input type="text" name="name" x-model="form.name" required class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-emerald-500 focus:border-emerald-500 text-sm py-2 @error('name', 'updateCustomer') border-red-500 focus:border-red-500 focus:ring-red-500 bg-red-50 @enderror">
+                    @error('name', 'updateCustomer')<p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p>@enderror
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Email <span class="text-red-500">*</span></label>
-                    <input type="email" name="email" x-model="form.email" required class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-emerald-500 focus:border-emerald-500 text-sm py-2">
+                    <input type="email" name="email" x-model="form.email" required class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-emerald-500 focus:border-emerald-500 text-sm py-2 @error('email', 'updateCustomer') border-red-500 focus:border-red-500 focus:ring-red-500 bg-red-50 @enderror">
+                    @error('email', 'updateCustomer')<p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p>@enderror
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-                    <input type="text" name="phone" x-model="form.phone" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-emerald-500 focus:border-emerald-500 text-sm py-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Phone <span class="text-red-500">*</span></label>
+                    <input type="text" name="phone" x-model="form.phone" placeholder="e.g. 9876543210" required maxlength="15" pattern="[0-9]{1,15}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 15);" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-emerald-500 focus:border-emerald-500 text-sm py-2 @error('phone', 'updateCustomer') border-red-500 focus:border-red-500 focus:ring-red-500 bg-red-50 @enderror">
+                    @error('phone', 'updateCustomer')<p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p>@enderror
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Tax/GST Number</label>
@@ -48,15 +51,16 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Status <span class="text-red-500">*</span></label>
                     <select name="status" x-model="form.status" required class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-emerald-500 focus:border-emerald-500 text-sm py-2">
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
+                        <option value="1">Active</option>
+                        <option value="0">Inactive</option>
                     </select>
                 </div>
             </div>
 
             <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
-                <textarea name="address" x-model="form.address" rows="2" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-emerald-500 focus:border-emerald-500 text-sm py-2"></textarea>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Address <span class="text-red-500">*</span></label>
+                <textarea name="address" x-model="form.address" rows="2" required class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-emerald-500 focus:border-emerald-500 text-sm py-2 @error('address', 'updateCustomer') border-red-500 focus:border-red-500 focus:ring-red-500 bg-red-50 @enderror"></textarea>
+                @error('address', 'updateCustomer')<p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p>@enderror
             </div>
 
             <div class="flex items-center justify-center space-x-3 pt-4 border-t border-gray-100">

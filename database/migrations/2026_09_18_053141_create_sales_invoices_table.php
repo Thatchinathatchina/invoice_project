@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('sales_invoices', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('customer_id')->nullable();
+            $table->unsignedBigInteger('customer_id')->nullable()->index();
             $table->string('invoice_number')->unique();
             $table->date('invoice_date');
             $table->date('due_date')->nullable();
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->decimal('tax', 15, 2)->default(0);
             $table->decimal('total', 15, 2)->default(0);
             $table->decimal('paid_amount', 15, 2)->default(0);
-            $table->string('status')->default('draft');
+            $table->string('status')->default('draft')->index();
             $table->text('notes')->nullable();
             $table->timestamps();
         });

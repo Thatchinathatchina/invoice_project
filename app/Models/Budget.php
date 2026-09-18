@@ -3,10 +3,14 @@
 namespace App\Models;
 
 use App\Enums\BudgetPeriod;
+use App\Traits\Filterable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Budget extends Model
 {
+    use HasFactory, Filterable;
+
     protected $fillable = [
         'name',
         'amount',
@@ -20,6 +24,7 @@ class Budget extends Model
         'amount' => 'decimal:2',
         'start_date' => 'date',
         'end_date' => 'date',
+        'status' => \App\Enums\StatusEnum::class,
     ];
 
     public function expenses()
@@ -32,6 +37,9 @@ class Budget extends Model
      */
     public function getTotalSpentAttribute(): float
     {
+        if (array_key_exists('expenses_sum_amount', $this->attributes)) {
+            return (float) $this->attributes['expenses_sum_amount'];
+        }
         return (float) $this->expenses()->sum('amount');
     }
 

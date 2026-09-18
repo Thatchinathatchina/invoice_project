@@ -53,8 +53,7 @@
                     <tr><td colspan="6" class="px-6 py-12 text-center text-gray-400 text-sm">No invoices found for the selected filter.</td></tr>
                 @endforelse
             </tbody>
-            @if($invoices->count() > 0)
-            <tfoot class="bg-gray-50">
+            @if($invoices->count() > 0)            <tfoot class="bg-gray-50">
                 <tr>
                     <td colspan="4" class="px-6 py-4 text-sm font-semibold text-gray-700 text-right">Total Amount:</td>
                     <td class="px-6 py-4 text-sm text-right font-bold text-gray-900">₹{{ number_format($invoices->sum('display_amount'), 2) }}</td>
@@ -64,6 +63,11 @@
             @endif
         </table>
     </div>
+    
+    @if($invoices->hasPages())
+    <div class="mt-4">
+        {{ $invoices->appends(request()->query())->links() }}
     </div>
+    @endif
 </div>
 @endsection

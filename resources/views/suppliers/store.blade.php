@@ -19,21 +19,24 @@
             </div>
         @endif
 
-        <form action="{{ route('suppliers.store') }}" method="POST">
+        <form action="{{ route('suppliers.store') }}" method="POST" novalidate>
             @csrf
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Name <span class="text-red-500">*</span></label>
-                    <input type="text" name="name" value="{{ old('name') }}" placeholder="e.g. Acme Supplier" required class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-emerald-500 focus:border-emerald-500 text-sm py-2">
+                    <input type="text" name="name" value="{{ old('name') }}" placeholder="e.g. Acme Supplier" required class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-emerald-500 focus:border-emerald-500 text-sm py-2 @error('name', 'storeSupplier') border-red-500 focus:border-red-500 focus:ring-red-500 bg-red-50 @enderror">
+                    @error('name', 'storeSupplier')<p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p>@enderror
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Email <span class="text-red-500">*</span></label>
-                    <input type="email" name="email" value="{{ old('email') }}" placeholder="e.g. contact@acmesupplier.com" required class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-emerald-500 focus:border-emerald-500 text-sm py-2">
+                    <input type="email" name="email" value="{{ old('email') }}" placeholder="e.g. contact@acmesupplier.com" required class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-emerald-500 focus:border-emerald-500 text-sm py-2 @error('email', 'storeSupplier') border-red-500 focus:border-red-500 focus:ring-red-500 bg-red-50 @enderror">
+                    @error('email', 'storeSupplier')<p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p>@enderror
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-                    <input type="text" name="phone" value="{{ old('phone') }}" placeholder="e.g. +91 9876543210" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-emerald-500 focus:border-emerald-500 text-sm py-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Phone <span class="text-red-500">*</span></label>
+                    <input type="text" name="phone" value="{{ old('phone') }}" placeholder="e.g. 9876543210" required maxlength="15" pattern="[0-9]{1,15}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 15);" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-emerald-500 focus:border-emerald-500 text-sm py-2 @error('phone', 'storeSupplier') border-red-500 focus:border-red-500 focus:ring-red-500 bg-red-50 @enderror">
+                    @error('phone', 'storeSupplier')<p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p>@enderror
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Tax/GST Number</label>
@@ -46,15 +49,16 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Status <span class="text-red-500">*</span></label>
                     <select name="status" required class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-emerald-500 focus:border-emerald-500 text-sm py-2">
-                        <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
-                        <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                        <option value="1" {{ old('status', 1) == 1 ? 'selected' : '' }}>Active</option>
+                        <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>Inactive</option>
                     </select>
                 </div>
             </div>
 
             <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
-                <textarea name="address" rows="2" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-emerald-500 focus:border-emerald-500 text-sm py-2">{{ old('address') }}</textarea>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Address <span class="text-red-500">*</span></label>
+                <textarea name="address" rows="2" required class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-emerald-500 focus:border-emerald-500 text-sm py-2 @error('address', 'storeSupplier') border-red-500 focus:border-red-500 focus:ring-red-500 bg-red-50 @enderror">{{ old('address') }}</textarea>
+                @error('address', 'storeSupplier')<p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p>@enderror
             </div>
 
             <div class="flex items-center justify-center space-x-3 pt-4 border-t border-gray-100">

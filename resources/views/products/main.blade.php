@@ -11,8 +11,8 @@
             <x-filters.search placeholder="Search product name, code..." />
             <x-filters.select name="status">
                 <option value="">All Status</option>
-                <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
-                <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Active</option>
+                <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Inactive</option>
             </x-filters.select>
             <x-slot:actions>
                 <button type="button" @click="$dispatch('open-store')" class="inline-flex items-center justify-center w-10 h-10 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition shadow-sm" title="Add Product">
@@ -46,8 +46,8 @@
                         </td>
                         <td class="px-6 py-4 text-sm font-medium text-gray-800">₹{{ number_format($product->price, 2) }}</td>
                         <td class="px-6 py-4">
-                            <span class="px-2 py-1 text-xs font-medium rounded-full {{ $product->status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600' }}">
-                                {{ ucfirst($product->status) }}
+                            <span class="px-2 py-1 text-xs font-medium rounded-full {{ $product->status?->value === 1 ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600' }}">
+                                {{ ucfirst(strtolower($product->status?->name ?? 'Inactive')) }}
                             </span>
                         </td>
                         <td class="p-4">
@@ -86,7 +86,7 @@
                 description: '{{ old('description') }}',
                 price: '{{ old('price') }}',
                 type: '{{ old('type', 1) }}',
-                status: '{{ old('status', 'active') }}'
+                status: '{{ old('status', 1) }}'
             },
             
             init() {
@@ -102,7 +102,7 @@
                         description: data.description || '',
                         price: data.price || 0,
                         type: data.type || 1,
-                        status: data.status || 'active'
+                        status: data.status !== undefined && data.status !== null ? data.status : 1
                     };
                     this.updateAction = `/products/${this.form.id}`;
                     this.$dispatch('open-modal', 'edit-product');

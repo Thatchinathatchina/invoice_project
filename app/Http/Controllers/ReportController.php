@@ -7,6 +7,7 @@ use App\Models\Expense;
 use App\Models\PurchaseInvoice;
 use App\Models\SalesInvoice;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ReportController extends Controller
 {
@@ -34,7 +35,7 @@ class ReportController extends Controller
 
     public function budgetVsExpense(Request $request)
     {
-        $budgets = Budget::with('expenses')->get()->map(function ($budget) {
+        $budgets = Budget::withSum('expenses', 'amount')->get()->map(function ($budget) {
             return [
                 'name' => $budget->name,
                 'budgeted' => (float) $budget->amount,
@@ -58,7 +59,8 @@ class ReportController extends Controller
         $invoices = collect();
 
         if ($type === 'all' || $type === 'sales') {
-            $sales = SalesInvoice::with('customer')
+            $sales = SalesInvoice::with('customer:id,name')
+                ->select('id', 'invoice_number', 'invoice_date', 'total', 'status', 'customer_id')
                 ->whereBetween('invoice_date', [$startDate, $endDate])
                 ->get()
                 ->map(function($inv) {
@@ -71,7 +73,8 @@ class ReportController extends Controller
         }
 
         if ($type === 'all' || $type === 'purchase') {
-            $purchases = PurchaseInvoice::with('supplier')
+            $purchases = PurchaseInvoice::with('supplier:id,name')
+                ->select('id', 'invoice_number', 'invoice_date', 'total_amount', 'status', 'supplier_id')
                 ->whereBetween('invoice_date', [$startDate, $endDate])
                 ->get()
                 ->map(function($inv) {
@@ -83,10 +86,26 @@ class ReportController extends Controller
             $invoices = $invoices->merge($purchases);
         }
 
-        $invoices = $invoices->sortByDesc('invoice_date');
+        $invoices = $invoices->sortByDesc('invoice_date')->values();
 
-        return view('reports.invoice-summary', compact(
-            'invoices', 'startDate', 'endDate', 'type'
-        ));
+        // Manual Pagination
+        $perPage = 20;
+        $page = $request->input('page', 1);
+        $offset = ($page - 1) * $perPage;
+        
+        $paginatedInvoices = new LengthAwarePaginator(
+            $invoices->slice($offset, $perPage),
+            $invoices->count(),
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        return view('reports.invoice-summary', [
+            'invoices' => $paginatedInvoices,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'type' => $type
+        ]);
     }
 }

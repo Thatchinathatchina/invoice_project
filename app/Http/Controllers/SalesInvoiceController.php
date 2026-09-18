@@ -14,7 +14,7 @@ class SalesInvoiceController extends Controller
 {
     public function index(Request $request)
     {
-        $query = SalesInvoice::with('customer');
+        $query = SalesInvoice::with('customer:id,name');
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -30,9 +30,9 @@ class SalesInvoiceController extends Controller
             $query->where('status', $request->status);
         }
 
-        $invoices = $query->latest()->paginate(10)->withQueryString();
-        $customers = Customer::where('status', 'active')->get();
-        $products = Product::where('status', 'active')->get();
+        $invoices = $query->latest()->paginate(20)->withQueryString();
+        $customers = Customer::select('id', 'name')->where('status', 'active')->get();
+        $products = Product::select('id', 'name')->where('status', 'active')->get();
         $invoiceNumber = SalesInvoice::generateInvoiceNumber();
         $statuses = InvoiceStatus::options();
         $currencies = CurrencyController::$currencies;

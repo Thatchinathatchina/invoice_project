@@ -20,7 +20,7 @@ class BudgetController extends Controller
             $query->where('status', $request->status);
         }
 
-        $budgets = $query->latest()->paginate(12)->withQueryString();
+        $budgets = $query->latest()->paginate(20)->withQueryString();
         return view('budgets.index', compact('budgets'));
     }
 

@@ -11,7 +11,7 @@ class ExpenseController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Expense::with('budget');
+        $query = Expense::with('budget:id,name');
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -26,7 +26,7 @@ class ExpenseController extends Controller
             $query->where('payment_method', $request->payment_method);
         }
 
-        $expenses = $query->latest('expense_date')->paginate(10)->withQueryString();
+        $expenses = $query->latest('expense_date')->paginate(20)->withQueryString();
         $budgets = Budget::where('status', 'active')->get();
         return view('expenses.index', compact('expenses', 'budgets'));
     }

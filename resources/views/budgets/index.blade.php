@@ -9,8 +9,8 @@
             <x-filters.search placeholder="Search budgets..." />
             <x-filters.select name="status">
                 <option value="">All Status</option>
-                <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
-                <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Active</option>
+                <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Inactive</option>
             </x-filters.select>
             <x-slot:actions>
                 <button type="button" @click="$dispatch('open-store')" class="inline-flex items-center justify-center w-10 h-10 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition shadow-sm" title="Add Budget">
@@ -48,8 +48,8 @@
                                 <div class="text-[10px] text-gray-400 mt-1 text-right">{{ $budget->usage_percent }}% used</div>
                             </x-table.td>
                             <x-table.td>
-                                <span class="px-2 py-1 text-xs font-medium rounded-full {{ $budget->status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600' }}">
-                                    {{ ucfirst($budget->status) }}
+                                <span class="px-2 py-1 text-xs font-medium rounded-full {{ $budget->status?->value === 1 ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600' }}">
+                                    {{ ucfirst(strtolower($budget->status?->name ?? 'Inactive')) }}
                                 </span>
                             </x-table.td>
                             <x-table.td align="right">
@@ -89,7 +89,7 @@
                 start_date: '{{ old('start_date') }}',
                 end_date: '{{ old('end_date') }}',
                 description: `{{ old('description') }}`,
-                status: '{{ old('status', 'active') }}'
+                status: '{{ old('status', 1) }}'
             },
             
             init() {
@@ -106,7 +106,7 @@
                     this.form.start_date = b.start_date ? b.start_date.split('T')[0] : '';
                     this.form.end_date = b.end_date ? b.end_date.split('T')[0] : '';
                     this.form.description = b.description || '';
-                    this.form.status = b.status;
+                    this.form.status = b.status !== undefined && b.status !== null ? b.status : 1;
                     this.$dispatch('open-modal', 'edit-budget');
                 });
 

@@ -42,6 +42,13 @@
                     </div>
                 </div>
                 <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Status <span class="text-red-500">*</span></label>
+                    <select name="status" required class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-emerald-500 focus:border-emerald-500 text-sm py-2">
+                        <option value="1" {{ old('status', 1) == 1 ? 'selected' : '' }}>Active</option>
+                        <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>Inactive</option>
+                    </select>
+                </div>
+                <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
                     <textarea name="description" rows="3" class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-emerald-500 focus:border-emerald-500">{{ old('description') }}</textarea>
                 </div>

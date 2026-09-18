@@ -13,7 +13,7 @@ class PurchaseInvoiceController extends Controller
 {
     public function index(Request $request)
     {
-        $query = PurchaseInvoice::with('supplier');
+        $query = PurchaseInvoice::with('supplier:id,name');
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -29,9 +29,9 @@ class PurchaseInvoiceController extends Controller
             $query->where('status', $request->status);
         }
 
-        $invoices = $query->latest()->paginate(10)->withQueryString();
-        $suppliers = Supplier::where('status', 'active')->get();
-        $products = Product::where('status', 'active')->get();
+        $invoices = $query->latest()->paginate(20)->withQueryString();
+        $suppliers = Supplier::select('id', 'name')->where('status', 'active')->get();
+        $products = Product::select('id', 'name')->where('status', 'active')->get();
         $invoiceNumber = PurchaseInvoice::generateInvoiceNumber();
         $statuses = InvoiceStatus::options();
         $currencies = CurrencyController::$currencies;

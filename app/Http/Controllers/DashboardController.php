@@ -31,11 +31,16 @@ class DashboardController extends Controller
         $overdueInvoices = SalesInvoice::where('status', InvoiceStatus::OVERDUE)->count();
 
         // Recent invoices
-        $recentSalesInvoices = SalesInvoice::with('customer')->latest()->take(5)->get();
-        $recentPurchaseInvoices = PurchaseInvoice::with('supplier')->latest()->take(5)->get();
+        $recentSalesInvoices = SalesInvoice::with('customer:id,name')
+            ->select('id', 'invoice_number', 'invoice_date', 'total', 'status', 'customer_id')
+            ->latest()->take(5)->get();
+            
+        $recentPurchaseInvoices = PurchaseInvoice::with('supplier:id,name')
+            ->select('id', 'invoice_number', 'invoice_date', 'total_amount', 'status', 'supplier_id')
+            ->latest()->take(5)->get();
 
         // Budget overview
-        $budgets = Budget::where('status', 'active')->get();
+        $budgets = Budget::select('id', 'name', 'amount', 'start_date', 'end_date')->where('status', 'active')->get();
 
 
 

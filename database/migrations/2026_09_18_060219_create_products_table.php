@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->decimal('price', 15, 2)->default(0);
-            $table->tinyInteger('type')->default(\App\Enums\ProductType::PRODUCT->value)->comment('1: product, 2: service');
-            $table->string('status')->default('active');
+            $table->tinyInteger('type')->default(\App\Enums\ProductType::PRODUCT->value)->index()->comment('1: product, 2: service');
+            $table->tinyInteger('status')->default(1)->index();
             $table->timestamps();
         });
     }

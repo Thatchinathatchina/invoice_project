@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Filterable;
 
 class Supplier extends Model
 {
+    use Filterable;
+
     protected $fillable = [
         'name',
         'email',
@@ -16,6 +19,10 @@ class Supplier extends Model
         'country',
         'tax_number',
         'status',
+    ];
+
+    protected $casts = [
+        'status' => \App\Enums\StatusEnum::class,
     ];
 
     public function purchaseInvoices()

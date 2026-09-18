@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('expenses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('category_id')->nullable();
+            $table->unsignedBigInteger('category_id')->nullable()->index();
             $table->decimal('amount', 15, 2);
-            $table->date('expense_date');
+            $table->date('expense_date')->index();
             $table->text('description')->nullable();
             $table->string('reference_number')->nullable();
-            $table->tinyInteger('payment_method')->nullable();
+            $table->tinyInteger('payment_method')->nullable()->index();
             $table->string('status')->default('pending');
             $table->timestamps();
         });

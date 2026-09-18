@@ -16,8 +16,8 @@ class PaymentController extends Controller
         $query = Payment::with([
             'payable' => function ($morphTo) {
                 $morphTo->morphWith([
-                    SalesInvoice::class => ['customer', 'payments'],
-                    PurchaseInvoice::class => ['supplier', 'payments'],
+                    SalesInvoice::class => ['customer:id,name'],
+                    PurchaseInvoice::class => ['supplier:id,name'],
                 ]);
             }
         ]);
@@ -50,7 +50,7 @@ class PaymentController extends Controller
             $query->where('payment_method', $request->method);
         }
 
-        $payments = $query->latest('payment_date')->paginate(10)->withQueryString();
+        $payments = $query->latest('payment_date')->paginate(20)->withQueryString();
         $methods = \App\Enums\PaymentMethod::options();
         
         return view('payments.index', compact('payments', 'methods'));

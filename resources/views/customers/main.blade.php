@@ -11,8 +11,8 @@
             <x-filters.search placeholder="Search customer name, email..." />
             <x-filters.select name="status">
                 <option value="">All Status</option>
-                <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
-                <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Active</option>
+                <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Inactive</option>
             </x-filters.select>
             <x-slot:actions>
                 <button type="button" @click="$dispatch('open-store')" class="inline-flex items-center justify-center w-10 h-10 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition shadow-sm" title="Add Customer">
@@ -45,8 +45,8 @@
                         <td class="px-6 py-4 text-sm text-gray-500">{{ $customer->phone ?? '-' }}</td>
                         <td class="px-6 py-4 text-sm text-gray-500">{{ $customer->city ?? '-' }}</td>
                         <td class="px-6 py-4">
-                            <span class="px-2 py-1 text-xs font-medium rounded-full {{ $customer->status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600' }}">
-                                {{ ucfirst($customer->status) }}
+                            <span class="px-2 py-1 text-xs font-medium rounded-full {{ $customer->status?->value === 1 ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600' }}">
+                                {{ ucfirst(strtolower($customer->status?->name ?? 'Inactive')) }}
                             </span>
                         </td>
                         <td class="p-4">
@@ -88,7 +88,7 @@
                 tax_number: '{{ old('tax_number') }}',
                 address: '{{ old('address') }}',
                 city: '{{ old('city') }}',
-                status: '{{ old('status', 'active') }}'
+                status: '{{ old('status', 1) }}'
             },
             
             init() {
@@ -106,7 +106,7 @@
                         tax_number: data.tax_number || '',
                         address: data.address || '',
                         city: data.city || '',
-                        status: data.status || 'active'
+                        status: data.status !== undefined && data.status !== null ? data.status : 1
                     };
                     this.updateAction = `/customers/${this.form.id}`;
                     this.$dispatch('open-modal', 'edit-customer');

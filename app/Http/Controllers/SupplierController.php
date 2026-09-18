@@ -3,29 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Supplier;
+use App\Http\Requests\StoreSupplierRequest;
+use App\Http\Requests\UpdateSupplierRequest;
 use Illuminate\Http\Request;
 
 class SupplierController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Supplier::query();
+        $query = Supplier::query()
+            ->searchAcross($request->search, ['name', 'email', 'phone', 'company'])
+            ->filterByStatus($request->status);
 
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('phone', 'like', "%{$search}%")
-                  ->orWhere('company', 'like', "%{$search}%");
-            });
-        }
-
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-
-        $suppliers = $query->latest()->paginate(10)->withQueryString();
+        $suppliers = $query->latest()->paginate(20)->withQueryString();
         return view('suppliers.main', compact('suppliers'));
     }
 
@@ -34,19 +24,9 @@ class SupplierController extends Controller
         return view('suppliers.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreSupplierRequest $request)
     {
-        $validated = $request->validateWithBag('storeSupplier', [
-            'name' => 'required|string|max:255',
-            'email' => 'nullable|email|max:255',
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string',
-            'city' => 'nullable|string|max:100',
-            'state' => 'nullable|string|max:100',
-            'country' => 'nullable|string|max:100',
-            'tax_number' => 'nullable|string|max:50',
-            'status' => 'required|in:active,inactive',
-        ]);
+        $validated = $request->validated();
 
         Supplier::create($validated);
 
@@ -65,19 +45,9 @@ class SupplierController extends Controller
         return view('suppliers.edit', compact('supplier'));
     }
 
-    public function update(Request $request, Supplier $supplier)
+    public function update(UpdateSupplierRequest $request, Supplier $supplier)
     {
-        $validated = $request->validateWithBag('updateSupplier', [
-            'name' => 'required|string|max:255',
-            'email' => 'nullable|email|max:255',
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string',
-            'city' => 'nullable|string|max:100',
-            'state' => 'nullable|string|max:100',
-            'country' => 'nullable|string|max:100',
-            'tax_number' => 'nullable|string|max:50',
-            'status' => 'required|in:active,inactive',
-        ]);
+        $validated = $request->validated();
 
         $supplier->update($validated);
 

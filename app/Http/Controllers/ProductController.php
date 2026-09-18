@@ -24,7 +24,7 @@ class ProductController extends Controller
             $query->where('status', $request->status);
         }
 
-        $products = $query->latest()->paginate(10)->withQueryString();
+        $products = $query->latest()->paginate(20)->withQueryString();
         $types = ProductType::options();
         
         return view('products.main', compact('products', 'types'));

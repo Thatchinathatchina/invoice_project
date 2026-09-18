@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->text('description')->nullable();
-            $table->string('status')->default('active');
+            $table->tinyInteger('status')->default(1)->index();
             $table->timestamps();
         });
     }
