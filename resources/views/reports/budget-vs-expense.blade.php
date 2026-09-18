@@ -1,7 +1,13 @@
 @extends('layouts.admin')
 @section('title', 'Budget vs Expense Report')
 @section('content')
-<div class="max-w-4xl mx-auto">
+<div class="space-y-6">
+    <div class="flex justify-end">
+        <a href="{{ route('reports.index') }}" class="inline-flex items-center justify-center gap-2 px-4 py-2 h-10 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Back to Reports
+        </a>
+    </div>
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50"><tr>

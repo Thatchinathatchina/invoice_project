@@ -1,83 +1,52 @@
-<<<<<<< HEAD
+# Invoice & Financial Management App
 
-# Invoice Management System
+Hey there! Welcome to the source code for my Invoice Management project. I built this application to handle everyday business financial tasks—like tracking sales, logging purchases, keeping an eye on expenses, and making sure payments actually line up.
 
-A robust, full-stack Laravel application designed to streamline billing, track expenses, and monitor financial health. Built with modern web development practices in mind, this project focuses on providing a clean, responsive, and highly interactive user experience.
+I wanted the user experience to be extremely fast and fluid, so almost all of the heavy lifting (like adding, editing, and deleting records) happens in clean pop-up modals without ever needing to reload the page. 
 
-## Features
-
-- **Dashboard Analytics**: Real-time overview of net profit, outstanding receivables, sales revenue, and recent invoice activities.
-- **Sales & Purchase Invoices**: Comprehensive invoice management including line-item calculations, tax handling, and status tracking (Draft, Pending, Paid, Overdue).
-- **Payment Tracking**: Centralized payment reporting seamlessly linked to respective sales and purchase invoices.
-- **Expense & Budget Management**: Track organizational expenses against predefined budgets.
-- **Modern UI/UX**: Fully modal-driven CRUD operations using Alpine.js, ensuring users rarely have to leave the page they are on.
-- **Thermal Receipts**: Custom view layouts specifically designed for thermal receipt printers.
+## What This App Does
+- **Dashboard**: Gives a quick overview of net profit, outstanding payments, and recent invoice activity.
+- **Invoices**: Handles both Sales and Purchase invoices. It calculates line-item totals and taxes automatically.
+- **Payments**: Keeps track of who paid what and when. The payments are strictly tied to specific invoices so nothing gets lost in the system.
+- **Expenses & Budgets**: Lets you set budgets and track business expenses against them.
+- **Thermal Printing**: Includes a custom view format specifically designed for printing receipts directly to a thermal printer.
 
 ## Tech Stack
+I built this using modern tools that I genuinely enjoy working with:
+- **Laravel 13** and **PHP 8.3+** for the backend logic.
+- **Tailwind CSS** and **Alpine.js** for the frontend UI. I specifically avoided heavy frontend frameworks (like React/Vue) to keep the app lightweight. It relies on clean, server-rendered Blade templates with Alpine handling the interactivity.
+- **MySQL** for the database.
 
-- **Backend**: Laravel 13, PHP 8.3+
-- **Frontend**: Blade Templating, Tailwind CSS, Alpine.js
-- **Database**: MySQL
-- **Architecture**: MVC pattern with strict adherence to Laravel conventions (Form Requests, Enums, Eloquent Relationships, Morphable polymorphic relationships for payments).
+## Standout Architecture Details
+If you're looking at the code, here are a few structural decisions I made to keep the project scalable:
+- **Polymorphic Payments**: Instead of creating separate payment tables for Sales and Purchases, I used Laravel's polymorphic relationships. A single `Payment` model dynamically links to whatever type of invoice it needs to.
+- **Service Classes**: I extracted heavy third-party logic (like the Frankfurter Exchange Rate API) out of the controllers and into dedicated Service classes (like `ExchangeRateService`) to keep the controllers thin and focused.
+- **Database Optimization**: I was very careful about database performance. If you look at the controllers, I heavily utilize Eloquent's eager loading (`with()`, `whereHasMorph()`) to make sure there are no N+1 query issues on the reporting pages.
 
-## Prerequisites
+## How to run it locally
 
-Make sure you have the following installed on your local machine:
+1. Clone the repo and `cd` into the folder.
+2. Install the backend and frontend dependencies:
+   ```bash
+   composer install
+   npm install
+   ```
+3. Copy `.env.example` to `.env` and set up your local MySQL database credentials.
+4. Generate your app key: 
+   ```bash
+   php artisan key:generate
+   ```
+5. Run the migrations and seeders to populate the database with some initial data: 
+   ```bash
+   php artisan migrate --seed
+   ```
+6. Compile the CSS/JS assets: 
+   ```bash
+   npm run build
+   ```
+7. Spin up the local development server: 
+   ```bash
+   php artisan serve
+   ```
 
-- PHP >= 8.3
-- Composer
-- Node.js & NPM
-- MySQL
-
-## Installation & Setup
-
-1. **Clone the repository**
-
-    ```bash
-    git clone <repository-url>
-    cd invoice_project
-    ```
-
-2. **Install PHP dependencies**
-
-    ```bash
-    composer install
-    ```
-
-3. **Install and compile frontend assets**
-
-    ```bash
-    npm install
-    npm run build
-    ```
-
-4. **Environment Setup**
-   Copy the example environment file and configure your database credentials:
-
-    ```bash
-    cp .env.example .env
-    php artisan key:generate
-    ```
-
-5. **Run Migrations & Seeders**
-   Set up the database tables and populate them with initial data:
-
-    ```bash
-    php artisan migrate --seed
-    ```
-
-6. **Serve the Application**
-    ```bash
-    php artisan serve
-    ```
-    You can now access the application at `http://localhost:8000`.
-
-## Architecture Highlights
-
-- **Polymorphic Payments**: The `Payment` model utilizes polymorphic relationships (`payable_id`, `payable_type`) to elegantly link a single payment table to both `SalesInvoice` and `PurchaseInvoice` models.
-- **Eager Loading**: Heavy emphasis on query optimization. Controllers actively use eager loading (e.g., `whereHasMorph`, `with`) to eliminate N+1 query problems, especially on complex reporting pages.
-- **Reusable Components**: The UI is built using highly reusable Blade components (`x-table`, `x-actions`, `x-modal`, `x-filters`), keeping the views DRY and maintainable.
-
-## License
-
-# This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+That's it! You should be able to access the app at `http://localhost:8000`. Let me know if you run into any issues.

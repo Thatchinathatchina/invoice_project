@@ -53,17 +53,40 @@ class ReportController extends Controller
     {
         $startDate = $request->input('start_date', now()->startOfMonth()->toDateString());
         $endDate = $request->input('end_date', now()->endOfMonth()->toDateString());
+        $type = $request->input('type', 'all');
 
-        $salesInvoices = SalesInvoice::with('customer')
-            ->whereBetween('invoice_date', [$startDate, $endDate])
-            ->get();
+        $invoices = collect();
 
-        $purchaseInvoices = PurchaseInvoice::with('supplier')
-            ->whereBetween('invoice_date', [$startDate, $endDate])
-            ->get();
+        if ($type === 'all' || $type === 'sales') {
+            $sales = SalesInvoice::with('customer')
+                ->whereBetween('invoice_date', [$startDate, $endDate])
+                ->get()
+                ->map(function($inv) {
+                    $inv->type_label = 'Sales';
+                    $inv->party_name = $inv->customer->name ?? 'N/A';
+                    $inv->display_amount = $inv->total;
+                    return $inv;
+                });
+            $invoices = $invoices->merge($sales);
+        }
+
+        if ($type === 'all' || $type === 'purchase') {
+            $purchases = PurchaseInvoice::with('supplier')
+                ->whereBetween('invoice_date', [$startDate, $endDate])
+                ->get()
+                ->map(function($inv) {
+                    $inv->type_label = 'Purchase';
+                    $inv->party_name = $inv->supplier->name ?? 'N/A';
+                    $inv->display_amount = $inv->total_amount;
+                    return $inv;
+                });
+            $invoices = $invoices->merge($purchases);
+        }
+
+        $invoices = $invoices->sortByDesc('invoice_date');
 
         return view('reports.invoice-summary', compact(
-            'salesInvoices', 'purchaseInvoices', 'startDate', 'endDate'
+            'invoices', 'startDate', 'endDate', 'type'
         ));
     }
 }

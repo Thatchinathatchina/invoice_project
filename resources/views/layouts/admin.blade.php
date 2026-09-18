@@ -18,9 +18,8 @@
             body { font-family: 'Inter', sans-serif; }
         </style>
     </head>
-    <body class="bg-gray-50 antialiased">
-        <div class="min-h-screen flex" x-data="{ sidebarOpen: true }">
-
+    <body class="bg-gray-50 antialiased overflow-hidden">
+        <div class="h-screen flex w-full" x-data="{ sidebarOpen: true }">
             {{-- Sidebar --}}
             <aside :class="sidebarOpen ? 'w-64' : 'w-20'" class="bg-gradient-to-b from-emerald-800 to-emerald-900 text-white flex-shrink-0 transition-all duration-300 flex flex-col">
                 {{-- Logo --}}
@@ -68,26 +67,37 @@
                 </nav>
 
                 {{-- User section --}}
-                <div class="border-t border-emerald-700 p-4">
+                @auth
+                <div class="border-t border-emerald-700 p-4 mt-auto">
                     <div class="flex items-center" x-show="sidebarOpen">
                         <div class="w-8 h-8 bg-emerald-600 rounded-full flex items-center justify-center text-sm font-bold">
-                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}
                         </div>
-                        <div class="ml-3 flex-1">
-                            <p class="text-sm font-medium">{{ Auth::user()->name }}</p>
-                            <p class="text-xs text-emerald-300">{{ Auth::user()->email }}</p>
+                        <div class="ml-3 flex-1 overflow-hidden">
+                            <p class="text-sm font-medium truncate">{{ Auth::user()->name ?? 'Admin User' }}</p>
+                            <p class="text-xs text-emerald-300 truncate">{{ Auth::user()->email ?? '' }}</p>
                         </div>
                     </div>
                     <form method="POST" action="{{ route('logout') }}" class="mt-3" x-show="sidebarOpen">
                         @csrf
                         <button type="submit" class="w-full flex items-center px-3 py-2 text-sm text-emerald-200 hover:text-white hover:bg-emerald-700/50 rounded-lg transition">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                             </svg>
                             Logout
                         </button>
                     </form>
                 </div>
+                @else
+                <div class="border-t border-emerald-700 p-4 mt-auto">
+                    <a href="{{ route('login') }}" class="w-full flex items-center px-3 py-2 text-sm text-emerald-200 hover:text-white hover:bg-emerald-700/50 rounded-lg transition" x-show="sidebarOpen">
+                        <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                        </svg>
+                        Login
+                    </a>
+                </div>
+                @endauth
             </aside>
 
             {{-- Main Content --}}
