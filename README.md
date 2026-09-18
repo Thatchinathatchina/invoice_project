@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+
 # Invoice Management System
 
 A robust, full-stack Laravel application designed to streamline billing, track expenses, and monitor financial health. Built with modern web development practices in mind, this project focuses on providing a clean, responsive, and highly interactive user experience.
@@ -21,6 +23,7 @@ A robust, full-stack Laravel application designed to streamline billing, track e
 ## Prerequisites
 
 Make sure you have the following installed on your local machine:
+
 - PHP >= 8.3
 - Composer
 - Node.js & NPM
@@ -29,40 +32,45 @@ Make sure you have the following installed on your local machine:
 ## Installation & Setup
 
 1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd invoice_project
-   ```
+
+    ```bash
+    git clone <repository-url>
+    cd invoice_project
+    ```
 
 2. **Install PHP dependencies**
-   ```bash
-   composer install
-   ```
+
+    ```bash
+    composer install
+    ```
 
 3. **Install and compile frontend assets**
-   ```bash
-   npm install
-   npm run build
-   ```
+
+    ```bash
+    npm install
+    npm run build
+    ```
 
 4. **Environment Setup**
    Copy the example environment file and configure your database credentials:
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   ```
+
+    ```bash
+    cp .env.example .env
+    php artisan key:generate
+    ```
 
 5. **Run Migrations & Seeders**
    Set up the database tables and populate them with initial data:
-   ```bash
-   php artisan migrate --seed
-   ```
+
+    ```bash
+    php artisan migrate --seed
+    ```
 
 6. **Serve the Application**
-   ```bash
-   php artisan serve
-   ```
-   You can now access the application at `http://localhost:8000`.
+    ```bash
+    php artisan serve
+    ```
+    You can now access the application at `http://localhost:8000`.
 
 ## Architecture Highlights
 
@@ -72,4 +80,4 @@ Make sure you have the following installed on your local machine:
 
 ## License
 
-This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
